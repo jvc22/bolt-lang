@@ -11,6 +11,7 @@ enum class TokenType {
     Identifier,
     Number,
     String,
+    Boolean,
     Keyword,
     Operator,
     Delimiter,

@@ -38,6 +38,42 @@ Token Lexer::nextToken() {
         return Token(TokenType::Number, number, currentLine);
     }
 
+    if (source[position] == '"') {
+        position++;
+        string str;
+
+        while (position < source.length() && source[position] != '"') {
+            if (source[position] == '\\') {
+                position++;
+
+                if (position < source.length()) {
+                    str += source[position++];
+                }
+            } else {
+                str += source[position++];
+            }
+        }
+
+        if (position < source.length() && source[position] == '"') {
+            position++;
+        }
+
+        return Token(TokenType::String, str, currentLine);
+    }
+
+    if (source.substr(position, 4) == "true") {
+        position += 4;
+
+        return Token(TokenType::Boolean, "true", currentLine);
+    }
+
+    if (source.substr(position, 5) == "false") {
+        position += 5;
+
+        return Token(TokenType::Boolean, "false", currentLine);
+    }
+
+
     if (source[position] == '+' || source[position] == '-' || source[position] == '*' || source[position] == '/') {
         char op = source[position];
 
