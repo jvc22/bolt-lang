@@ -18,10 +18,20 @@ Token Lexer::nextToken() {
         return Token(TokenType::EndOfFile, "", currentLine);
     }
 
+    if (isalpha(source[position])) {
+        string identifier;
+
+        while (position < source.length() && (isalnum(source[position]) || source[position] == '_')) {
+            identifier += source[position++];
+        }
+
+        return Token(TokenType::Identifier, identifier, currentLine);
+    }
+
     if (isdigit(source[position])) {
         string number;
 
-        while (isdigit(source[position])) {
+        while (position < source.length() && isdigit(source[position])) {
             number += source[position++];
         }
 
