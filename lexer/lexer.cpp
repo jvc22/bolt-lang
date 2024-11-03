@@ -49,6 +49,10 @@ Token Lexer::nextToken() {
             position += 2;
 
             return Token(TokenType::Operator, "==", currentLine);
+        } else {
+            position++;
+
+            return Token(TokenType::Operator, "=", currentLine);
         }
     }
 
