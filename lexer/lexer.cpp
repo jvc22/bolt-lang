@@ -1,7 +1,20 @@
 #include "lexer.h"
 #include <cctype>
+#include <set>
 
 using namespace std;
+
+set<string> operators = {
+    "+", "-", "*", "/", "="
+};
+
+set<string> keywords = {
+    "if", "else", "while", "for", "return", "let", "function", "print"
+};
+
+set<string> delimiters = {
+    ",", ";", "(", ")", "[", "]", "{", "}"
+};
 
 Lexer::Lexer(const string& src) : source(src) {}
 
@@ -23,6 +36,10 @@ Token Lexer::nextToken() {
 
         while (position < source.length() && (isalnum(source[position]) || source[position] == '_')) {
             identifier += source[position++];
+        }
+
+        if (keywords.find(identifier) != keywords.end()) {
+            return Token(TokenType::Keyword, identifier, currentLine);
         }
 
         return Token(TokenType::Identifier, identifier, currentLine);
@@ -61,61 +78,28 @@ Token Lexer::nextToken() {
         return Token(TokenType::String, str, currentLine);
     }
 
-    if (source.substr(position, 4) == "true") {
-        position += 4;
+    if (operators.find(string(1, source[position])) != operators.end()) {
+        string op = string(1, source[position]);
 
-        return Token(TokenType::Boolean, "true", currentLine);
-    }
+        if (op == "=") {
+            if (position + 1 < source.length() && source[position + 1] == '=') {
+                position += 2;
 
-    if (source.substr(position, 5) == "false") {
-        position += 5;
+                return Token(TokenType::Operator, "==", currentLine);
+            } else {
+                position++;
 
-        return Token(TokenType::Boolean, "false", currentLine);
-    }
-
-
-    if (source[position] == '+' || source[position] == '-' || source[position] == '*' || source[position] == '/') {
-        char op = source[position];
-
-        return Token(TokenType::Operator, string(1, op), currentLine);
-    }
-
-    if (source[position] == '=') {
-        if (position + 1 < source.length() && source[position + 1] == '=') {
-            position += 2;
-
-            return Token(TokenType::Operator, "==", currentLine);
-        } else {
-            position++;
-
-            return Token(TokenType::Operator, "=", currentLine);
+                return Token(TokenType::Operator, "=", currentLine);
+            }
         }
+
+        return Token(TokenType::Operator, op, currentLine);
     }
 
-    if (source[position] == ',') {
-        return Token(TokenType::Delimiter, string(1, source[position++]), currentLine);
-    }
+    if (delimiters.find(string(1, source[position])) != delimiters.end()) {
+        string de = string(1, source[position++]);
 
-    if (source[position] == ';') {
-        return Token(TokenType::Delimiter, string(1, source[position++]), currentLine);
-    }
-
-    if (source[position] == '{' || source[position] == '}') {
-        char brace = source[position++];
-
-        return Token(TokenType::Delimiter, string(1, brace), currentLine);
-    }
-
-    if (source[position] == '(' || source[position] == ')') {
-        char paren = source[position++];
-
-        return Token(TokenType::Delimiter, string(1, paren), currentLine);
-    }
-
-    if (source[position] == '[' || source[position] == ']') {
-        char bracket = source[position++];
-
-        return Token(TokenType::Delimiter, string(1, bracket), currentLine);
+        return Token(TokenType::Delimiter, de, currentLine);
     }
 
     return Token(TokenType::Undefined, string(1, source[position++]), currentLine);
