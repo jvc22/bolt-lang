@@ -38,5 +38,19 @@ Token Lexer::nextToken() {
         return Token(TokenType::Number, number, currentLine);
     }
 
+    if (source[position] == '+' || source[position] == '-' || source[position] == '*' || source[position] == '/') {
+        char op = source[position];
+
+        return Token(TokenType::Operator, string(1, op), currentLine);
+    }
+
+    if (source[position] == '=') {
+        if (position + 1 < source.length() && source[position + 1] == '=') {
+            position += 2;
+
+            return Token(TokenType::Operator, "==", currentLine);
+        }
+    }
+
     return Token(TokenType::Undefined, string(1, source[position++]), currentLine);
 }
