@@ -56,5 +56,31 @@ Token Lexer::nextToken() {
         }
     }
 
+    if (source[position] == ',') {
+        return Token(TokenType::Delimiter, string(1, source[position++]), currentLine);
+    }
+
+    if (source[position] == ';') {
+        return Token(TokenType::Delimiter, string(1, source[position++]), currentLine);
+    }
+
+    if (source[position] == '{' || source[position] == '}') {
+        char brace = source[position++];
+
+        return Token(TokenType::Delimiter, string(1, brace), currentLine);
+    }
+
+    if (source[position] == '(' || source[position] == ')') {
+        char paren = source[position++];
+
+        return Token(TokenType::Delimiter, string(1, paren), currentLine);
+    }
+
+    if (source[position] == '[' || source[position] == ']') {
+        char bracket = source[position++];
+
+        return Token(TokenType::Delimiter, string(1, bracket), currentLine);
+    }
+
     return Token(TokenType::Undefined, string(1, source[position++]), currentLine);
 }
