@@ -5,7 +5,7 @@
 using namespace std;
 
 set<string> operators = {
-    "+", "-", "*", "/", "="
+    "+", "-", "*", "/", "=", "<", ">"
 };
 
 set<string> keywords = {
@@ -84,6 +84,14 @@ Token Lexer::nextToken() {
     // Operators verification
     if (operators.find(string(1, source[position])) != operators.end()) {
         string op = string(1, source[position]);
+
+        if (op == "<" || op == ">") {
+            if (source[position + 1] == '=') {
+                position += 2;
+
+                return Token(TokenType::Operator, op + "=", currentLine);
+            }
+        }
 
         if (op == "=") {
             if (position + 1 < source.length() && source[position + 1] == '=') {
