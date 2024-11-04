@@ -31,7 +31,7 @@ Token Lexer::nextToken() {
         return Token(TokenType::EndOfFile, "", currentLine);
     }
 
-    // Alphanumeric (identifier) verification
+    // Alphanumeric (identifier & keyword) verification
     if (isalpha(source[position])) {
         string identifier;
 
@@ -108,4 +108,16 @@ Token Lexer::nextToken() {
     }
 
     return Token(TokenType::Undefined, string(1, source[position++]), currentLine);
+}
+
+vector<Token> Lexer::tokenize() {
+    vector<Token> tokens;
+    Token token = nextToken();
+
+    while (token.type != TokenType::EndOfFile) {
+        tokens.push_back(token);
+        token = nextToken();
+    }
+
+    return tokens;
 }
