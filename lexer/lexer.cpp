@@ -86,10 +86,14 @@ Token Lexer::nextToken() {
         string op = string(1, source[position]);
 
         if (op == "<" || op == ">") {
-            if (source[position + 1] == '=') {
+            if (position + 1 < source.length() && source[position + 1] == '=') {
                 position += 2;
 
                 return Token(TokenType::Operator, op + "=", currentLine);
+            } else {
+                position++;
+
+                return Token(TokenType::Operator, op, currentLine);
             }
         }
 
