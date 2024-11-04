@@ -31,6 +31,7 @@ Token Lexer::nextToken() {
         return Token(TokenType::EndOfFile, "", currentLine);
     }
 
+    // Alphanumeric (identifier) verification
     if (isalpha(source[position])) {
         string identifier;
 
@@ -45,6 +46,7 @@ Token Lexer::nextToken() {
         return Token(TokenType::Identifier, identifier, currentLine);
     }
 
+    // Number verification
     if (isdigit(source[position])) {
         string number;
 
@@ -55,6 +57,7 @@ Token Lexer::nextToken() {
         return Token(TokenType::Number, number, currentLine);
     }
 
+    // String verification
     if (source[position] == '"') {
         position++;
         string str;
@@ -78,6 +81,7 @@ Token Lexer::nextToken() {
         return Token(TokenType::String, str, currentLine);
     }
 
+    // Operators verification
     if (operators.find(string(1, source[position])) != operators.end()) {
         string op = string(1, source[position]);
 
@@ -96,6 +100,7 @@ Token Lexer::nextToken() {
         return Token(TokenType::Operator, op, currentLine);
     }
 
+    // Delimiters verification
     if (delimiters.find(string(1, source[position])) != delimiters.end()) {
         string de = string(1, source[position++]);
 
