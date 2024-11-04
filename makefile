@@ -1,4 +1,4 @@
-TARGET = lexer_program
+TARGET = program
 
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall
